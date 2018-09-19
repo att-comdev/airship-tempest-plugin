@@ -1,0 +1,53 @@
+# Copyright 2018 AT&T Corp
+# All Rights Reserved.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+#
+
+import logging
+
+from airship_tempest_plugin.tests.api.shipyard import base
+
+from tempest import config
+from tempest.lib import decorators
+
+CONF = config.CONF
+LOG = logging.getLogger(__name__)
+
+
+class ActionsUcpTest(base.BaseShipyardTest):
+    """Shipyard UCP API test cases on basis of GET operation on Action"""
+
+    @decorators.idempotent_id('94901561-7ad1-4e9c-8df8-afe3a7f63c09')
+    def test_list_actions(self):
+        """List of actions, Successful with response status 200"""
+        response, _ = self.shipyard_actions_client.list_actions()
+        self.assertEqual(response['status'], 200)
+
+    @decorators.idempotent_id('b0d4c23a-d3a4-4a12-8e10-ac6f8a98d33e')
+    def test_get_action(self):
+        """Get actions, Successful with response status 200"""
+        response, _ = self.shipyard_actions_client.get_action()
+        self.assertEqual(response['status'], 200)
+
+    @decorators.idempotent_id('6b16f987-8192-4a01-82c4-3ffc1bd9402c')
+    def test_get_action_validation(self):
+        """Get actions validation, Successful with response status 200"""
+        response, _ = self.shipyard_actions_client.get_action_validation()
+        self.assertEqual(response['status'], 200)
+
+    @decorators.idempotent_id('a8bc9e6b-bfa3-4635-a1ec-0b9ddc9cb03f')
+    def test_get_action_step(self):
+        """Get actions step, Successful with response status 200"""
+        response, _ = self.shipyard_actions_client.get_action_step()
+        self.assertEqual(response['status'], 200)
