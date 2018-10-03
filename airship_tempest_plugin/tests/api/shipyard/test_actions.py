@@ -14,15 +14,9 @@
 #    under the License.
 #
 
-import logging
-
 from airship_tempest_plugin.tests.api.shipyard import base
 
-from tempest import config
 from tempest.lib import decorators
-
-CONF = config.CONF
-LOG = logging.getLogger(__name__)
 
 
 class ActionsTest(base.BaseShipyardTest):
