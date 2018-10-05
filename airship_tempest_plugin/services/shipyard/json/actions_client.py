@@ -22,6 +22,7 @@ from oslo_serialization import jsonutils as json
 
 from tempest.lib.common import rest_client
 
+
 # NOTE(rb560u): The following will need to be rewritten in the future if
 # functional testing is desired:
 #  - 'def create_action`
@@ -37,7 +38,10 @@ class ActionsClient(rest_client.RestClient):
         resp, body = self.get('actions')
         self.expected_success(200, resp.status)
         body = json.loads(body)
-        return rest_client.ResponseBody(resp, body)
+        if isinstance(body, list):
+            return rest_client.ResponseBodyList(resp, body)
+        else:
+            return rest_client.ResponseBody(resp, body)
 
     def create_action(self, action=None):
         url = 'actions'
