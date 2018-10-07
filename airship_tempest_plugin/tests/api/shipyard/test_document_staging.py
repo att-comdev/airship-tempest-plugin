@@ -36,7 +36,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
     @decorators.idempotent_id('db351ee5-a608-4492-b705-6e6c654a60e7')
     def test_get_collection_list(self):
         """Config docs status, Successful with response status 200"""
-        response = self.shipyard_document_staging_client.\
+        response = self.shipyard_document_staging_client. \
             get_configdocs_status()
         self.assertEqual(response.response['status'], '200')
 
@@ -47,7 +47,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
         """
         collection_id = self._get_collection_id()
         try:
-            response = self.shipyard_document_staging_client.\
+            response = self.shipyard_document_staging_client. \
                 get_configdocs(collection_id)
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
@@ -62,7 +62,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
         """
         collection_id = self._get_collection_id()
         try:
-            response = self.shipyard_document_staging_client.\
+            response = self.shipyard_document_staging_client. \
                 get_configdocs_version(collection_id, "buffer")
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
@@ -75,7 +75,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
            Successful with response status 200
         """
         collection_id = self._get_collection_id()
-        response = self.shipyard_document_staging_client.\
+        response = self.shipyard_document_staging_client. \
             get_configdocs_version(collection_id, "committed")
         self.assertEqual(response.response['status'], '200')
 
@@ -85,7 +85,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
         Successful with response status 200
         """
         collection_id = self._get_collection_id()
-        response = self.shipyard_document_staging_client.\
+        response = self.shipyard_document_staging_client. \
             get_configdocs_version(collection_id, "successful_site_action")
         self.assertEqual(response.response['status'], '200')
 
@@ -95,7 +95,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
            Successful with response status 200
         """
         collection_id = self._get_collection_id()
-        response = self.shipyard_document_staging_client.\
+        response = self.shipyard_document_staging_client. \
             get_configdocs_version(collection_id, "last_site_action")
         self.assertEqual(response.response['status'], '200')
 
@@ -105,7 +105,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
            In case document does not found, return 404 Not Found
         """
         try:
-            response = self.shipyard_document_staging_client.\
+            response = self.shipyard_document_staging_client. \
                 get_renderedconfigdocs()
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
@@ -119,7 +119,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
            In case document does not found, return 404 Not Found
         """
         try:
-            response = self.shipyard_document_staging_client.\
+            response = self.shipyard_document_staging_client. \
                 get_renderedconfigdocs_version("buffer")
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
@@ -131,7 +131,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
         """Get RenderedConfig docs of committed version,
            Successful with response status 200
         """
-        response = self.shipyard_document_staging_client.\
+        response = self.shipyard_document_staging_client. \
             get_renderedconfigdocs_version("committed")
         self.assertEqual(response.response['status'], '200')
 
@@ -142,7 +142,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
            In case document does not found, return 404 Not Found
         """
         try:
-            response = self.shipyard_document_staging_client.\
+            response = self.shipyard_document_staging_client. \
                 get_renderedconfigdocs_version("successful_site_action")
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
@@ -154,6 +154,17 @@ class DocumentStagingTest(base.BaseShipyardTest):
         """Get RenderedConfig docs of last_site_action,
            Successful with response status 200
         """
-        response = self.shipyard_document_staging_client.\
+        response = self.shipyard_document_staging_client. \
             get_renderedconfigdocs_version("last_site_action")
         self.assertEqual(response.response['status'], '200')
+
+    @decorators.idempotent_id('1aedf793-dde4-49df-a6d2-109bc11b6db5')
+    def test_get_collection_compare_two_revisions_doc(self):
+        """Get Config docs of two versions and compare in between,
+           Successful with response status 200
+        """
+        response = self.shipyard_document_staging_client. \
+            get_configdocs_compare_two("committed%2Cbuffer")
+        self.assertEqual(response.response['status'], '200')
+        self.assertEqual(response[1]['new_version'], 'buffer')
+        self.assertEqual(response[1]['base_version'], 'committed')

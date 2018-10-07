@@ -87,3 +87,8 @@ class DocumentStagingClient(rest_client.RestClient):
         self.expected_success(200, resp.status)
         body = json.loads(body)
         return rest_client.ResponseBody(resp, body)
+
+    def get_configdocs_compare_two(self, version_arg=None):
+        resp, body = self.get('configdocs?%s' % version_arg)
+        self.expected_success(200, resp.status)
+        return rest_client.ResponseBodyData(resp, body)
