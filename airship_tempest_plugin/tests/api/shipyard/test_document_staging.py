@@ -15,15 +15,11 @@
 #
 
 import logging
-
 from airship_tempest_plugin.tests.api.shipyard import base
-
-from tempest import config
 from tempest.lib import decorators
 from tempest.lib import exceptions
 
-CONF = config.CONF
-LOG = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 class DocumentStagingTest(base.BaseShipyardTest):
@@ -42,7 +38,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
 
     @decorators.idempotent_id('743ab304-be35-4e45-ad47-e124dce3b9dc')
     def test_get_collection(self):
-        """Get Config docs, Successful with response status 200
+        """Get Config docs for a particular collection, Successful with
+           response status 200.
            In case document does not found, return 404 Not Found
         """
         collection_id = self._get_collection_id()
@@ -51,7 +48,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
                 get_configdocs(collection_id)
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
-            print("The Shipyard buffer does not contain this collection")
+            logger.info("The Shipyard buffer does not contain this collection")
             pass
 
     @decorators.idempotent_id('bd138747-582e-4c2e-9f26-09c3fccad96f')
@@ -66,7 +63,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
                 get_configdocs_version(collection_id, "buffer")
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
-            print("The Shipyard buffer does not contain this collection")
+            logger.info("The Shipyard buffer does not contain this collection")
             pass
 
     @decorators.idempotent_id('d42c691a-07a2-41cc-91a6-9d02be8f2649')
@@ -109,7 +106,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
                 get_renderedconfigdocs()
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
-            print("buffer version does not exist")
+            logger.info("buffer version does not exist")
             pass
 
     @decorators.idempotent_id('ffd9d1d9-9846-4493-9f9e-e35f12ce56da')
@@ -123,7 +120,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
                 get_renderedconfigdocs_version("buffer")
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
-            print("buffer version does not exist")
+            logger.info("buffer version does not exist")
             pass
 
     @decorators.idempotent_id('353e9955-7f12-4561-a3c2-c9819f259775')
@@ -146,7 +143,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
                 get_renderedconfigdocs_version("successful_site_action")
             self.assertEqual(response.response['status'], '200')
         except exceptions.NotFound:
-            print("This revision does not exist")
+            logger.info("This revision does not exist")
             pass
 
     @decorators.idempotent_id('9af56232-eacf-4baa-85e9-cbb93772974d')
@@ -166,5 +163,5 @@ class DocumentStagingTest(base.BaseShipyardTest):
         response = self.shipyard_document_staging_client. \
             get_configdocs_compare_two("committed%2Cbuffer")
         self.assertEqual(response.response['status'], '200')
-        self.assertEqual(response[1]['new_version'], 'buffer')
-        self.assertEqual(response[1]['base_version'], 'committed')
+        self.assertEqual(response['new_version'], 'buffer')
+        self.assertEqual(response['base_version'], 'committed')

@@ -19,7 +19,6 @@ http://airship-shipyard.readthedocs.io/en/latest/API.html#document-staging-api
 """
 
 from oslo_serialization import jsonutils as json
-
 from tempest.lib.common import rest_client
 
 

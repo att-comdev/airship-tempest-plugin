@@ -19,24 +19,23 @@ from tempest.lib import decorators
 
 
 class SiteStatusesTest(base.BaseShipyardTest):
-
     @decorators.idempotent_id('c4c6fd0f-83dd-42ae-a4eb-430708490b71')
     def test_get_site_statuses(self):
         """Get Site status, Successful with response status 200"""
         response = self.shipyard_site_statuses_client.get_site_statuses()
         self.assertEqual(response.response['status'], '200')
-        self.assertEqual(response[1]['nodes_provision_status'][0]['status'], 'Deployed')
-        self.assertEqual(response[1]['machines_powerstate'][0]['power_state'], 'on')
+        self.assertEqual(response['nodes_provision_status'][0]['status'], 'Deployed')
+        self.assertEqual(response['machines_powerstate'][0]['power_state'], 'on')
 
     @decorators.idempotent_id('9cfbf0b9-e826-4a9d-b1d2-055adaa8ecc2')
     def test_get_site_statuses_node_provision_status(self):
         """Get Site status of Node Provision and
            Successful with response status 200
         """
-        response = self.shipyard_site_statuses_client.\
+        response = self.shipyard_site_statuses_client. \
             get_site_statuses_arg('nodes-provision-status')
         self.assertEqual(response.response['status'], '200')
-        self.assertEqual(response[1]['nodes_provision_status'][0]['status'], 'Deployed')
+        self.assertEqual(response['nodes_provision_status'][0]['status'], 'Deployed')
 
     @decorators.idempotent_id('c329dbe8-4cb2-4a8b-9aa8-3a032c73102b')
     def test_get_site_statuses_node_power_status(self):
@@ -46,7 +45,7 @@ class SiteStatusesTest(base.BaseShipyardTest):
         response = self.shipyard_site_statuses_client. \
             get_site_statuses_arg('machines-power-state')
         self.assertEqual(response.response['status'], '200')
-        self.assertEqual(response[1]['machines_powerstate'][0]['power_state'], 'on')
+        self.assertEqual(response['machines_powerstate'][0]['power_state'], 'on')
 
     @decorators.idempotent_id('52a87dde-1458-45fd-92c6-edcd93eb0c14')
     def test_get_site_statuses_both_filters_together(self):
@@ -56,5 +55,5 @@ class SiteStatusesTest(base.BaseShipyardTest):
         response = self.shipyard_site_statuses_client. \
             get_site_statuses_arg('nodes-provision-status%2Cmachines-power-state')
         self.assertEqual(response.response['status'], '200')
-        self.assertEqual(response[1]['nodes_provision_status'][0]['status'], 'Deployed')
-        self.assertEqual(response[1]['machines_powerstate'][0]['power_state'], 'on')
+        self.assertEqual(response['nodes_provision_status'][0]['status'], 'Deployed')
+        self.assertEqual(response['machines_powerstate'][0]['power_state'], 'on')

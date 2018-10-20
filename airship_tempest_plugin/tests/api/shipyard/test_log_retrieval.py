@@ -19,7 +19,6 @@ from tempest.lib import decorators
 
 
 class LogRetrievalTest(base.BaseShipyardTest):
-
     def _get_action_step_id(self):
         resp = self.shipyard_actions_client.list_actions()
         self.assertTrue(len(resp[1]) > 0,
@@ -30,7 +29,6 @@ class LogRetrievalTest(base.BaseShipyardTest):
     def test_get_action_step_logs(self):
         """Get actions step log, Successful with response status 200"""
         action_id, step_id = self._get_action_step_id()
-        response = self.shipyard_log_retrieval_client.\
+        response = self.shipyard_log_retrieval_client. \
             get_action_step_logs(action_id, step_id)
         self.assertEqual(response.response['status'], '200')
-        self.assertEqual(response[1]['task_id'], step_id)

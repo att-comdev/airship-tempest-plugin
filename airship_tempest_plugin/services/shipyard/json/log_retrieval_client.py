@@ -18,8 +18,6 @@
 http://airship-shipyard.readthedocs.io/en/latest/API.html#airflow-monitoring-api
 """
 
-from oslo_serialization import jsonutils as json
-
 from tempest.lib.common import rest_client
 
 
@@ -30,5 +28,4 @@ class LogRetrievalClient(rest_client.RestClient):
         resp, body = \
             self.get('actions/%s/steps/%s/logs' % (action_id, step_id))
         self.expected_success(200, resp.status)
-        body = json.loads(body)
-        return rest_client.ResponseBody(resp, body)
+        return rest_client.ResponseBodyData(resp, body)

@@ -19,7 +19,6 @@ http://airship-shipyard.readthedocs.io/en/latest/API.html#airflow-monitoring-api
 """
 
 from oslo_serialization import jsonutils as json
-
 from tempest.lib.common import rest_client
 
 
@@ -39,7 +38,4 @@ class AirflowMonitoringClient(rest_client.RestClient):
         resp, body = self.get('workflows/%s' % workflow_id)
         self.expected_success(200, resp.status)
         body = json.loads(body)
-        if isinstance(body, list):
-            return rest_client.ResponseBodyList(resp, body)
-        else:
-            return rest_client.ResponseBody(resp, body)
+        return rest_client.ResponseBody(resp, body)

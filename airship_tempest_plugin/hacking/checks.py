@@ -190,7 +190,7 @@ def no_client_alias_in_test_cases(logical_line, filename):
     """Check that test cases don't use "self.client" to define a client.
     P103
     """
-    if "airship_tempest_plugin/tests/api/shipyard/rbac" in filename:
+    if "airship_tempest_plugin/tests/api/" in filename:
         if "self.client" in logical_line or "cls.client" in logical_line:
             return 0, "Do not use 'self.client' as a service client alias"
 

@@ -15,12 +15,10 @@
 #
 
 from airship_tempest_plugin.tests.api.shipyard import base
-
 from tempest.lib import decorators
 
 
 class AirflowMonitoringTest(base.BaseShipyardTest):
-
     def _get_workflows_id(self):
         resp = self.shipyard_airflow_monitoring_client.list_workflows()
         self.assertTrue(len(resp[0]) > 0,
@@ -37,6 +35,7 @@ class AirflowMonitoringTest(base.BaseShipyardTest):
     def test_get_workflow(self):
         """A particular workflow detail, Successful with response status 200"""
         workflow_id = self._get_workflows_id()
-        response = self.shipyard_airflow_monitoring_client.\
+        response = self.shipyard_airflow_monitoring_client. \
             get_workflow(workflow_id)
         self.assertEqual(response.response['status'], '200')
+        self.assertEqual(response['workflow_id'], workflow_id)
