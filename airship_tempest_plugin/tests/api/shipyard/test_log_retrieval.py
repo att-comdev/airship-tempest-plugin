@@ -32,3 +32,4 @@ class LogRetrievalTest(base.BaseShipyardTest):
         response = self.shipyard_log_retrieval_client. \
             get_action_step_logs(action_id, step_id)
         self.assertEqual(response.response['status'], '200')
+        self.assertTrue(len(response.data) > 0, 'No actions step log available')

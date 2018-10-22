@@ -19,7 +19,13 @@ from airship_tempest_plugin.tests.api.shipyard import base
 from tempest.lib import decorators
 from tempest.lib import exceptions
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler('testLog/shipyard_api.log')
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(funcName)s - \
+                                             %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 class DocumentStagingTest(base.BaseShipyardTest):
@@ -47,6 +53,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
             response = self.shipyard_document_staging_client. \
                 get_configdocs(collection_id)
             self.assertEqual(response.response['status'], '200')
+            self.assertTrue(len(response[0]) > 0,
+                            'No configdocs available, nothing to test')
         except exceptions.NotFound:
             logger.info("The Shipyard buffer does not contain this collection")
             pass
@@ -62,6 +70,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
             response = self.shipyard_document_staging_client. \
                 get_configdocs_version(collection_id, "buffer")
             self.assertEqual(response.response['status'], '200')
+            self.assertTrue(len(response.data) > 0, 'No configdocs of \
+                                                  buffer version available')
         except exceptions.NotFound:
             logger.info("The Shipyard buffer does not contain this collection")
             pass
@@ -75,6 +85,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
         response = self.shipyard_document_staging_client. \
             get_configdocs_version(collection_id, "committed")
         self.assertEqual(response.response['status'], '200')
+        self.assertTrue(len(response.data) > 0, 'No configdocs of \
+                                               committed version available')
 
     @decorators.idempotent_id('2940492a-47b0-4218-859a-b9cb556f480b')
     def test_get_collection_version_successful_site_action(self):
@@ -85,6 +97,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
         response = self.shipyard_document_staging_client. \
             get_configdocs_version(collection_id, "successful_site_action")
         self.assertEqual(response.response['status'], '200')
+        self.assertTrue(len(response.data) > 0, 'No configdocs of \
+                                        successful_site_action version available')
 
     @decorators.idempotent_id('f6b86b85-5797-4664-95a9-0b6d242b50b7')
     def test_get_collection_version_last_site_action(self):
@@ -95,6 +109,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
         response = self.shipyard_document_staging_client. \
             get_configdocs_version(collection_id, "last_site_action")
         self.assertEqual(response.response['status'], '200')
+        self.assertTrue(len(response.data) > 0, 'No configdocs of \
+                                                 last_site_action version available')
 
     @decorators.idempotent_id('2db31479-8d1f-4d95-a3a0-31b1bf726f39')
     def test_get_renderedconfigdocs(self):
@@ -105,6 +121,7 @@ class DocumentStagingTest(base.BaseShipyardTest):
             response = self.shipyard_document_staging_client. \
                 get_renderedconfigdocs()
             self.assertEqual(response.response['status'], '200')
+            self.assertTrue(len(response[1]) > 0, 'No RenderedConfig docs available')
         except exceptions.NotFound:
             logger.info("buffer version does not exist")
             pass
@@ -119,6 +136,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
             response = self.shipyard_document_staging_client. \
                 get_renderedconfigdocs_version("buffer")
             self.assertEqual(response.response['status'], '200')
+            self.assertTrue(len(response.data) > 0, 'No renderedconfigdocs of \
+                                                     buffer version available')
         except exceptions.NotFound:
             logger.info("buffer version does not exist")
             pass
@@ -131,6 +150,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
         response = self.shipyard_document_staging_client. \
             get_renderedconfigdocs_version("committed")
         self.assertEqual(response.response['status'], '200')
+        self.assertTrue(len(response.data) > 0, 'No renderedconfigdocs of \
+                                                 committed version available')
 
     @decorators.idempotent_id('3daac942-baec-4078-a632-71b66dca1e91')
     def test_get_renderedconfigdocs_version_successful_site_action(self):
@@ -142,6 +163,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
             response = self.shipyard_document_staging_client. \
                 get_renderedconfigdocs_version("successful_site_action")
             self.assertEqual(response.response['status'], '200')
+            self.assertTrue(len(response.data) > 0, 'No renderedconfigdocs of \
+                                      successful_site_action version available')
         except exceptions.NotFound:
             logger.info("This revision does not exist")
             pass
@@ -154,6 +177,8 @@ class DocumentStagingTest(base.BaseShipyardTest):
         response = self.shipyard_document_staging_client. \
             get_renderedconfigdocs_version("last_site_action")
         self.assertEqual(response.response['status'], '200')
+        self.assertTrue(len(response.data) > 0, 'No renderedconfigdocs of \
+                                                 last_site_action version available')
 
     @decorators.idempotent_id('1aedf793-dde4-49df-a6d2-109bc11b6db5')
     def test_get_collection_compare_two_revisions_doc(self):
@@ -163,5 +188,5 @@ class DocumentStagingTest(base.BaseShipyardTest):
         response = self.shipyard_document_staging_client. \
             get_configdocs_compare_two("committed%2Cbuffer")
         self.assertEqual(response.response['status'], '200')
-        self.assertEqual(response['new_version'], 'buffer')
-        self.assertEqual(response['base_version'], 'committed')
+        self.assertEqual(response[0]['new_version'], 'buffer')
+        self.assertEqual(response[0]['base_version'], 'committed')
