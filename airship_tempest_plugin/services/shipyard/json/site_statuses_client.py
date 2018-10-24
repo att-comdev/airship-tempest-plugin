@@ -19,8 +19,8 @@ https://github.com/openstack/airship-shipyard/blob/master/docs/source/API.rst#si
 """
 
 from oslo_serialization import jsonutils as json
-
 from tempest.lib.common import rest_client
+from tempest.lib import decorators
 
 
 class SiteStatusesClient(rest_client.RestClient):
@@ -32,3 +32,8 @@ class SiteStatusesClient(rest_client.RestClient):
         self.expected_success(200, resp.status)
         body = json.loads(body)
         return rest_client.ResponseBody(resp, body)
+
+    def get_site_statuses_arg(self, args=None):
+        resp, body = self.get('site_statuses?filters=%s' % args)
+        self.expected_success(200, resp.status)
+        return rest_client.ResponseBodyData(resp, body)

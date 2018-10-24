@@ -144,7 +144,7 @@ def no_rbac_rule_validation_decorator(physical_line, filename):
     """
     global have_rbac_decorator
 
-    if ("airship_tempest_plugin/tests/api/rbac" in filename or
+    if ("airship_tempest_plugin/tests/api/shipyard/rbac" in filename or
             "airship_tempest_plugin/tests/scenario" in filename):
 
         if RULE_VALIDATION_DECORATOR.match(physical_line):
@@ -163,7 +163,7 @@ def no_rbac_suffix_in_test_filename(filename):
     """Check that RBAC filenames end with "_rbac" suffix.
     P101
     """
-    if "airship_tempest_plugin/tests/api" in filename:
+    if "airship_tempest_plugin/tests/api/shipyard/rbac" in filename:
 
         if filename.endswith('rbac_base.py'):
             return
@@ -176,7 +176,7 @@ def no_rbac_test_suffix_in_test_class_name(physical_line, filename):
     """Check that RBAC class names end with "RbacTest"
     P102
     """
-    if "airship_tempest_plugin/tests/api/rbac/" in filename:
+    if "airship_tempest_plugin/tests/api/shipyard/rbac" in filename:
 
         if filename.endswith('rbac_base.py'):
             return
@@ -190,7 +190,7 @@ def no_client_alias_in_test_cases(logical_line, filename):
     """Check that test cases don't use "self.client" to define a client.
     P103
     """
-    if "airship_tempest_plugin/tests/api" in filename:
+    if "airship_tempest_plugin/tests/api/" in filename:
         if "self.client" in logical_line or "cls.client" in logical_line:
             return 0, "Do not use 'self.client' as a service client alias"
 

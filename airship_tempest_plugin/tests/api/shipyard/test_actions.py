@@ -15,17 +15,14 @@
 #
 
 from airship_tempest_plugin.tests.api.shipyard import base
-
 from tempest.lib import decorators
 
 
 class ActionsTest(base.BaseShipyardTest):
-
     def _get_action_id(self):
         resp = self.shipyard_actions_client.list_actions()
         self.assertTrue(len(resp[1]) > 0,
                         'No actions available, nothing to test')
-        # get the response body
         return resp[1]['id']
 
     def _get_action_step_id(self):
@@ -48,6 +45,7 @@ class ActionsTest(base.BaseShipyardTest):
         """Get actions, Successful with response status 200"""
         resp = self.shipyard_actions_client.get_action(action_id)
         self.assertEqual(resp.response['status'], '200')
+        self.assertEqual(resp.values()[0][0]['action_id'], action_id)
 
     @decorators.idempotent_id('a8bc9e6b-bfa3-4635-a1ec-0b9ddc9cb03f')
     def test_get_action_step(self):
@@ -55,3 +53,4 @@ class ActionsTest(base.BaseShipyardTest):
         action_id, step_id = self._get_action_step_id()
         resp = self.shipyard_actions_client.get_action_step(action_id, step_id)
         self.assertEqual(resp.response['status'], '200')
+        self.assertEqual(resp['task_id'], step_id)

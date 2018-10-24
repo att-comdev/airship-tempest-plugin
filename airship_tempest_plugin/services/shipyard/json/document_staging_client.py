@@ -19,8 +19,8 @@ http://airship-shipyard.readthedocs.io/en/latest/API.html#document-staging-api
 """
 
 from oslo_serialization import jsonutils as json
-
 from tempest.lib.common import rest_client
+
 
 # NOTE(rb560u): The following will need to be rewritten in the future if
 # functional testing is desired:
@@ -37,7 +37,10 @@ class DocumentStagingClient(rest_client.RestClient):
         resp, body = self.get('configdocs')
         self.expected_success(200, resp.status)
         body = json.loads(body)
-        return rest_client.ResponseBody(resp, body)
+        if isinstance(body, list):
+            return rest_client.ResponseBodyList(resp, body)
+        else:
+            return rest_client.ResponseBody(resp, body)
 
     def create_configdocs(self, collection_id=None):
         url = "configdocs/%s" % collection_id
@@ -52,13 +55,30 @@ class DocumentStagingClient(rest_client.RestClient):
         resp, body = self.get('configdocs/%s' % collection_id)
         self.expected_success(200, resp.status)
         body = json.loads(body)
-        return rest_client.ResponseBody(resp, body)
+        if isinstance(body, list):
+            return rest_client.ResponseBodyList(resp, body)
+        else:
+            return rest_client.ResponseBody(resp, body)
+
+    def get_configdocs_version(self, collection_id=None, version_arg=None):
+        resp, body = self.get('configdocs/%s?version=%s' %
+                              (collection_id, version_arg))
+        self.expected_success(200, resp.status)
+        return rest_client.ResponseBodyData(resp, body)
 
     def get_renderedconfigdocs(self):
         resp, body = self.get('renderedconfigdocs')
         self.expected_success(200, resp.status)
         body = json.loads(body)
-        return rest_client.ResponseBody(resp, body)
+        if isinstance(body, list):
+            return rest_client.ResponseBodyList(resp, body)
+        else:
+            return rest_client.ResponseBody(resp, body)
+
+    def get_renderedconfigdocs_version(self, version_arg=None):
+        resp, body = self.get('renderedconfigdocs?version=%s' % version_arg)
+        self.expected_success(200, resp.status)
+        return rest_client.ResponseBodyData(resp, body)
 
     def commit_configdocs(self, force=False, dryrun=False):
         post_body = json.dumps({"force": force, "dryrun": dryrun})
@@ -66,3 +86,12 @@ class DocumentStagingClient(rest_client.RestClient):
         self.expected_success(200, resp.status)
         body = json.loads(body)
         return rest_client.ResponseBody(resp, body)
+
+    def get_configdocs_compare_two(self, version_arg=None):
+        resp, body = self.get('configdocs?%s' % version_arg)
+        self.expected_success(200, resp.status)
+        body = json.loads(body)
+        if isinstance(body, list):
+            return rest_client.ResponseBodyList(resp, body)
+        else:
+            return rest_client.ResponseBody(resp, body)
